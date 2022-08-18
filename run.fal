@@ -1,0 +1,179 @@
+ A one page simulation game by Solon Papageorgiou:
+
+ function Character( player_name )
+
+ return bless([
+ "name" => player_name,
+ "health" => 10
+ ])
+
+
+ end
+
+ function fight_character_turn( character, criminal)
+
+ char = character.clone()
+
+ crim = criminal.clone()
+
+ > char.name, " attacked ", crim.name , "!"
+
+ if (char.health != 0) and ( crim.health != 0 )
+
+ chance = random(1)
+
+ if chance == 1
+ crim.health = crim.health - 1
+
+ > "You shoot the criminal. Criminal health is: ", crim.health
+
+ if crim.health == 0
+ > "You killed the criminal."
+ end
+
+ end
+
+ fight_criminal_turn( char, crim)
+
+
+ elif (char.health == 0) or (crim.health == 0)
+
+ > "Death"
+ end
+
+ end
+
+ function fight_criminal_turn( character, criminal)
+
+ global outcome
+
+ char = character.clone()
+
+ crim = criminal.clone()
+
+ > char.name, " was attacked by ", crim.name, "!"
+
+ if (char.health != 0) and (crim.health != 0)
+
+ chance = random(1)
+
+ if chance == 1
+ char.health = char.health - 1
+
+ > "You have been shooted. Your health is: ", char.health
+
+ if char.health == 0
+ outcome = 0
+ > "You died."
+ end
+
+ end
+
+ fight_character_turn( char, crim)
+
+
+
+ elif (char.health == 0) or (crim.health == 0)
+
+
+ > "Death"
+
+ end
+
+ end
+
+ function run_game(job_number, job_list, character, criminal)
+
+ global outcome
+
+
+ > "You are facing: ", job_list[job_number]
+
+
+ > "Press a key and enter to start fight"
+ input()
+
+ enemies_number = random( 2, 10 )
+
+ enemies_number_killed = enemies_number
+
+ loop
+
+ --enemies_number
+
+ if enemies_number == 0
+ > "Enemies killed: ", enemies_number_killed
+ break
+ end
+
+ fight_character_turn( character, criminal)
+
+ if outcome == 0
+ outcome = 1
+ > "Enemies faced: ", enemies_number
+ break
+ end
+
+ end
+
+ > "Original Character Health: ", character.health
+ > "Original Criminal Health: ", criminal.health
+ >
+
+
+ // Show jobs.
+
+ iter = job_list.first()
+
+ while iter.hasCurrent()
+
+
+
+ > iter.key() , ". ", iter.value()
+
+
+
+ iter.next()
+
+ end
+
+ >
+ > "Enter a number to do a job: "
+
+ job_number = int ( input() )
+
+ run_game( job_number, job_list, character, criminal )
+
+ end
+
+
+
+ job_list = [ => ]
+ job_list [ 1 ] = "Attempt at stealing paintings from a museum."
+ job_list [ 2 ] = "Attempt at robbing a bank."
+ job_list [ 3 ] = "Attempt at burgaring a rich mansion."
+
+ outcome = 1 //1 is Alive, 0 is Dead
+
+ > "Criminal And FBI Simulation Game"
+ >
+ >> "Please enter a name for your character: "
+
+ name = input()
+
+ character = Character(name)
+
+ criminal = Character("John")
+
+ > "Your Name is: ", character.name
+
+ > "Your Health is: ", character.health
+
+ > "Press a key and enter to start fight"
+ input()
+
+ run_game( random(1,3) , job_list, character, criminal)
+
+
+ > "Press a key and enter to exit"
+ input()
